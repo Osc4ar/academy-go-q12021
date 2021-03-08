@@ -17,19 +17,21 @@ func NewTaskPresenter() TaskPresenter {
 }
 
 func (tp *taskPresenter) ResponseTasks(t []*model.Task) []*model.Task {
+	tasksToPresent := []*model.Task{}
 	for _, task := range t {
-		tp.ResponseTask(task)
+		tasksToPresent = append(tasksToPresent, tp.ResponseTask(task))
 	}
 
-	return t
+	return tasksToPresent
 }
 
 func (tp *taskPresenter) ResponseTask(t *model.Task) *model.Task {
+	newTask := *t
 	if t.Completed {
-		t.Content = "ToDo: " + t.Content
+		newTask.Content = "ToDo: " + t.Content
 	} else {
-		t.Content = "Done: " + t.Content
+		newTask.Content = "Done: " + t.Content
 	}
 
-	return t
+	return &newTask
 }

@@ -11,10 +11,12 @@ import (
 )
 
 func main() {
-	reader := datastore.NewDB()
-	defer datastore.CloseDB()
+	database, err := datastore.NewDB()
+	if err != nil {
+		log.Fatal("Failed to init DB")
+	}
 
-	registry := registry.NewRegistry(reader)
+	registry := registry.NewRegistry(database)
 
 	muxRouter := mux.NewRouter().StrictSlash(true)
 	muxRouter = router.NewRouter(muxRouter, registry.NewAppController())

@@ -1,20 +1,20 @@
 package registry
 
 import (
-	"encoding/csv"
+	"taskmanager/infrastructure/datastore"
 	"taskmanager/interface/controllers"
 )
 
 type registry struct {
-	reader *csv.Reader
+	database datastore.DB
 }
 
 type Registry interface {
 	NewAppController() controllers.AppController
 }
 
-func NewRegistry(reader *csv.Reader) Registry {
-	return &registry{reader}
+func NewRegistry(database datastore.DB) Registry {
+	return &registry{database}
 }
 
 func (r *registry) NewAppController() controllers.AppController {

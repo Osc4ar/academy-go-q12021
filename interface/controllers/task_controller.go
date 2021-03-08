@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"taskmanager/domain/model"
@@ -32,22 +31,16 @@ func (tc *taskController) GetTasks(w http.ResponseWriter) error {
 		return err
 	}
 
-	fmt.Printf("Tasks: %v\n", t)
-
 	return json.NewEncoder(w).Encode(t)
 }
 
 func (tc *taskController) GetTask(id uint, w http.ResponseWriter) error {
 	var t *model.Task
 
-	fmt.Printf("ID: %v\n", id)
-
 	t, err := tc.taskInteractor.GetOne(t, id)
 	if err != nil {
 		return err
 	}
-
-	fmt.Printf("Task: %v\n", t)
 
 	return json.NewEncoder(w).Encode(t)
 }
