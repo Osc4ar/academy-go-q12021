@@ -6,6 +6,8 @@ import (
 	"os"
 )
 
+var csvfile *os.File
+
 // NewDB returns a new CSV Reader with the DB content
 func NewDB() *csv.Reader {
 	csvfile, err := os.Open("tasks.csv")
@@ -14,4 +16,9 @@ func NewDB() *csv.Reader {
 	}
 
 	return csv.NewReader(csvfile)
+}
+
+// CloseDB closes the file used as DB
+func CloseDB() {
+	csvfile.Close()
 }

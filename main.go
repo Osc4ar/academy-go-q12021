@@ -6,14 +6,18 @@ import (
 	"taskmanager/infrastructure/datastore"
 	"taskmanager/infrastructure/router"
 	"taskmanager/registry"
+
+	"github.com/gorilla/mux"
 )
 
 func main() {
 	reader := datastore.NewDB()
+	defer datastore.CloseDB()
 
 	registry := registry.NewRegistry(reader)
 
-	router.NewRouter(registry.NewAppController())
+	muxRouter := mux.NewRouter().StrictSlash(true)
+	muxRouter = router.NewRouter(muxRouter, registry.NewAppController())
 
-	log.Fatal(http.ListenAndServe("localhost:8080", nil))
+	log.Fatal(http.ListenAndServe("localhost:8080", muxRouter))
 }

@@ -16,6 +16,7 @@ type taskRepository struct {
 // TaskRepository contains the Methods used with the Tasks data
 type TaskRepository interface {
 	FindAll(t []*model.Task) ([]*model.Task, error)
+	Find(t *model.Task, id uint) (*model.Task, error)
 }
 
 // NewTaskRepository creates a new TaskRepository with the given csv.Reader
@@ -50,6 +51,32 @@ func (tr *taskRepository) FindAll(t []*model.Task) ([]*model.Task, error) {
 	}
 
 	return tasks, nil
+}
+
+func (tr *taskRepository) Find(t *model.Task, id uint) (*model.Task, error) {
+	for {
+		record, err := tr.reader.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatal(err)
+			continue
+		}
+
+		task, err := recordToTask(record)
+		if err != nil {
+			log.Fatal(err)
+			continue
+		}
+
+		if task.ID == id {
+			t = &task
+			return t, nil
+		}
+	}
+
+	return &model.Task{}, fmt.Errorf("Could not find record with ID: %v", id)
 }
 
 func recordToTask(record []string) (model.Task, error) {

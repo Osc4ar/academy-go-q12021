@@ -9,6 +9,7 @@ type taskPresenter struct {
 
 type TaskPresenter interface {
 	ResponseTasks(t []*model.Task) []*model.Task
+	ResponseTask(t *model.Task) *model.Task
 }
 
 func NewTaskPresenter() TaskPresenter {
@@ -17,11 +18,17 @@ func NewTaskPresenter() TaskPresenter {
 
 func (tp *taskPresenter) ResponseTasks(t []*model.Task) []*model.Task {
 	for _, task := range t {
-		if task.Completed {
-			task.Content = "ToDo: " + task.Content
-		} else {
-			task.Content = "Done: " + task.Content
-		}
+		tp.ResponseTask(task)
+	}
+
+	return t
+}
+
+func (tp *taskPresenter) ResponseTask(t *model.Task) *model.Task {
+	if t.Completed {
+		t.Content = "ToDo: " + t.Content
+	} else {
+		t.Content = "Done: " + t.Content
 	}
 
 	return t
