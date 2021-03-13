@@ -1,6 +1,7 @@
 package router
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"taskmanager/interface/controllers"
@@ -12,7 +13,11 @@ import (
 func NewRouter(muxRouter *mux.Router, c controllers.AppController) *mux.Router {
 	muxRouter.HandleFunc("/tasks", func(rw http.ResponseWriter, r *http.Request) {
 		rw.Header().Add("content-type", "application/json")
-		c.GetTasks(rw)
+
+		if err := c.GetTasks(rw); err != nil {
+			rw.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintf(rw, "Could not retrieve tasks: %v", err)
+		}
 	})
 
 	muxRouter.HandleFunc("/tasks/{id}", func(rw http.ResponseWriter, r *http.Request) {
@@ -25,7 +30,11 @@ func NewRouter(muxRouter *mux.Router, c controllers.AppController) *mux.Router {
 		}
 
 		rw.Header().Add("content-type", "application/json")
-		c.GetTask(uint(id), rw)
+
+		if err := c.GetTask(uint(id), rw); err != nil {
+			rw.WriteHeader(http.StatusBadRequest)
+			fmt.Fprintf(rw, "Could not retrieve task: %v", err)
+		}
 	})
 
 	return muxRouter
