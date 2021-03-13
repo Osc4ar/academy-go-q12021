@@ -24,7 +24,7 @@ type DB interface {
 func NewDB() (DB, error) {
 	csvfile, err := os.Open("tasks.csv")
 	if err != nil {
-		log.Fatalln("Could not open the CSV file", err)
+		return nil, err
 	}
 	defer csvfile.Close()
 
@@ -60,20 +60,20 @@ func populateTasks(reader *csv.Reader) ([]*model.Task, error) {
 			break
 		}
 		if err != nil {
-			log.Fatal(err)
+			log.Print(err)
 			continue
 		}
 
 		task, err := recordToTask(record)
 		if err != nil {
-			log.Fatal(err)
+			log.Print(err)
 			continue
 		}
 
 		tasks = append(tasks, &task)
 	}
 
-	if len(tasks) < 0 {
+	if len(tasks) == 0 {
 		return nil, fmt.Errorf("CSV file could not be parsed")
 	}
 
@@ -83,19 +83,19 @@ func populateTasks(reader *csv.Reader) ([]*model.Task, error) {
 func recordToTask(record []string) (model.Task, error) {
 	id, err := strconv.Atoi(record[0])
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		return model.Task{}, fmt.Errorf("Invalid value for ID: %v", record[0])
 	}
 
 	completed, err := strconv.ParseBool(record[2])
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		return model.Task{}, fmt.Errorf("Invalid value for Completed: %v", record[2])
 	}
 
 	workingTime, err := strconv.Atoi(record[4])
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		return model.Task{}, fmt.Errorf("Invalid value for WorkingTime: %v", record[4])
 	}
 
