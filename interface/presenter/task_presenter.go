@@ -28,9 +28,9 @@ func (tp *taskPresenter) ResponseTasks(t []*model.Task) []*model.Task {
 func (tp *taskPresenter) ResponseTask(t *model.Task) *model.Task {
 	newTask := *t
 	if t.Completed {
-		newTask.Content = "ToDo: " + t.Content
-	} else {
 		newTask.Content = "Done: " + t.Content
+	} else {
+		newTask.Content = "ToDo: " + t.Content
 	}
 
 	return &newTask
