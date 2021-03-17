@@ -39,6 +39,22 @@ func NewDB() (DB, error) {
 	return populatedDB, nil
 }
 
+func (d *dbType) RefreshDB() error {
+	csvfile, err := os.Open("tasks.csv")
+	if err != nil {
+		return err
+	}
+	defer csvfile.Close()
+
+	tasks, err := populateTasks(csv.NewReader(csvfile))
+	if err != nil {
+		return fmt.Errorf("Could not open DB")
+	}
+
+	d.tasks = tasks
+	return nil
+}
+
 func (d *dbType) FindByID(id uint) (*model.Task, error) {
 	for _, task := range d.tasks {
 		if task.ID == id {
@@ -53,6 +69,8 @@ func (d *dbType) FindAll() []*model.Task {
 }
 
 func (d *dbType) SaveRecords(tasks []*model.Task) error {
+	defer d.RefreshDB()
+
 	file, err := os.Create("tasks.csv")
 	if err != nil {
 		return err
