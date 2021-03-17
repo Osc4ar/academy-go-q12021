@@ -18,6 +18,7 @@ type dbType struct {
 type DB interface {
 	FindByID(id uint) (*model.Task, error)
 	FindAll() []*model.Task
+	SaveRecords([]*model.Task) error
 }
 
 // NewDB returns a new DB instance
@@ -49,6 +50,38 @@ func (d *dbType) FindByID(id uint) (*model.Task, error) {
 
 func (d *dbType) FindAll() []*model.Task {
 	return d.tasks
+}
+
+func (d *dbType) SaveRecords(tasks []*model.Task) error {
+	file, err := os.Create("tasks.csv")
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+
+	for _, task := range tasks {
+		err := writer.Write(convertTaskToSlice(task))
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func convertTaskToSlice(t *model.Task) []string {
+	record := []string{
+		strconv.Itoa(int(t.ID)),
+		t.Content,
+		strconv.FormatBool(t.Completed),
+		t.DueDate,
+		strconv.Itoa(int(t.WorkingTime)),
+	}
+
+	return record
 }
 
 func populateTasks(reader *csv.Reader) ([]*model.Task, error) {
