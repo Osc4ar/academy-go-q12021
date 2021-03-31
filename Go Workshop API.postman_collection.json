@@ -1,0 +1,81 @@
+{
+	"info": {
+		"_postman_id": "ff98cd5f-93ab-46dd-a265-f6af3e058475",
+		"name": "Go Workshop API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "All Tasks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/tasks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Task by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/tasks/4667248466",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tasks",
+						"4667248466"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Workers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/cocurrent-task?type=odd&items=10&items_per_workers=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cocurrent-task"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "odd"
+						},
+						{
+							"key": "items",
+							"value": "10"
+						},
+						{
+							"key": "items_per_workers",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
