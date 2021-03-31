@@ -29,7 +29,10 @@ func NewApiClient(token string, projectId string) ApiClient {
 func (api *apiClient) RequestAllTasks(t []*model.Task) ([]*model.Task, error) {
 	url := "https://api.todoist.com/rest/v1/tasks"
 
-	req, _ := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
 	req.Header.Set("Authorization", "Bearer "+api.Token)
 
 	query := req.URL.Query()
