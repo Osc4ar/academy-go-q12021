@@ -1,4 +1,4 @@
-1,"Read Clean Architecture",false,"2021-03-04",0
-2,"Create CSV for Tasks",true,"2021-03-05",30
-3,"Implement CSV reader",false,"2021-03-05",60
-4,"Implement REST endpoint",false,"2021-03-04",15
+4662651264,Connect Endpoint to Todoist API,false,,0
+4662651377,Implement Tests,false,,0
+4662651841,Save API data to CSV,false,,0
+4662654121,Create new endpoint with worker pool,false,,0

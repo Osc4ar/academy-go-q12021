@@ -18,6 +18,7 @@ type dbType struct {
 type DB interface {
 	FindByID(id uint) (*model.Task, error)
 	FindAll() []*model.Task
+	SaveRecords([]*model.Task) error
 }
 
 // NewDB returns a new DB instance
@@ -38,6 +39,22 @@ func NewDB() (DB, error) {
 	return populatedDB, nil
 }
 
+func (d *dbType) RefreshDB() error {
+	csvfile, err := os.Open("tasks.csv")
+	if err != nil {
+		return err
+	}
+	defer csvfile.Close()
+
+	tasks, err := populateTasks(csv.NewReader(csvfile))
+	if err != nil {
+		return fmt.Errorf("Could not open DB")
+	}
+
+	d.tasks = tasks
+	return nil
+}
+
 func (d *dbType) FindByID(id uint) (*model.Task, error) {
 	for _, task := range d.tasks {
 		if task.ID == id {
@@ -49,6 +66,40 @@ func (d *dbType) FindByID(id uint) (*model.Task, error) {
 
 func (d *dbType) FindAll() []*model.Task {
 	return d.tasks
+}
+
+func (d *dbType) SaveRecords(tasks []*model.Task) error {
+	defer d.RefreshDB()
+
+	file, err := os.Create("tasks.csv")
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+
+	for _, task := range tasks {
+		err := writer.Write(convertTaskToSlice(task))
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func convertTaskToSlice(t *model.Task) []string {
+	record := []string{
+		strconv.Itoa(int(t.ID)),
+		t.Content,
+		strconv.FormatBool(t.Completed),
+		t.DueDate,
+		strconv.Itoa(int(t.WorkingTime)),
+	}
+
+	return record
 }
 
 func populateTasks(reader *csv.Reader) ([]*model.Task, error) {

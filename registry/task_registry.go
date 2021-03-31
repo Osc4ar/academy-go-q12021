@@ -18,7 +18,7 @@ func (r *registry) NewTaskInteractor() interactor.TaskInteractor {
 }
 
 func (r *registry) NewTaskRepository() urepository.TaskRepository {
-	return irepository.NewTaskRepository(r.database)
+	return irepository.NewTaskRepository(r.database, r.client)
 }
 
 func (r *registry) NewTaskPresenter() upresenter.TaskPresenter {
