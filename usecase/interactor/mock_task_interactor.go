@@ -26,3 +26,7 @@ func (mti *mockTaskInteractor) GetOne(t *model.Task, id uint) (*model.Task, erro
 
 	return nil, fmt.Errorf("Could not find ID: %v", id)
 }
+
+func (mti *mockTaskInteractor) GetConcurrently(t []*model.Task, onlyEven bool, items, itemsPerWorker int) ([]*model.Task, error) {
+	return mti.tasks, nil
+}
