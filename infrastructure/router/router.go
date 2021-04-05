@@ -45,17 +45,20 @@ func NewRouter(muxRouter *mux.Router, c controllers.AppController) *mux.Router {
 		itemsInt, err := strconv.Atoi(items)
 		if err != nil {
 			rw.WriteHeader(http.StatusBadRequest)
+			fmt.Fprintf(rw, "Cannot parse the Items parameter with error %v", err)
 			return
 		}
 
 		itemsPerWorkerInt, err := strconv.Atoi(itemsPerWorker)
 		if err != nil {
 			rw.WriteHeader(http.StatusBadRequest)
+			fmt.Fprintf(rw, "Cannot parse the Items Per Worker parameter with error %v", err)
 			return
 		}
 
 		if objectsType != "odd" && objectsType != "even" {
 			rw.WriteHeader(http.StatusBadRequest)
+			fmt.Fprintf(rw, "Invalid Type value provided: %v. Expected to be \"odd\" or \"even\"", objectsType)
 			return
 		}
 
